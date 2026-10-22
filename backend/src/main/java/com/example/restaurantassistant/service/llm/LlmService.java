@@ -11,5 +11,9 @@ public interface LlmService {
   }
   Ranking generateRecommendation(Context context);
   record Context(String currentMessage, List<PreferenceView> preferences, List<Turn> recentMessages,
-      List<MenuItem> candidates) {}
+      List<MenuItem> candidates, List<String> contextualMemories) {
+    public Context(String message,List<PreferenceView> preferences,List<Turn> recent,List<MenuItem> candidates) {
+      this(message,preferences,recent,candidates,List.of());
+    }
+  }
 }

@@ -35,6 +35,7 @@ public class ChatService {
   private final int recentCount;
   private final IntentFilter intentFilter;
   private final StockService stock;
+  private final com.example.restaurantassistant.service.memory.MemoryService memories;
   private final RecommendationSetRepository sets;
 
   public ChatService(
@@ -46,6 +47,7 @@ public class ChatService {
       LlmService llm,
       RecommendationService recommendations,
       IntentFilter intentFilter, StockService stock, RecommendationSetRepository sets,
+      com.example.restaurantassistant.service.memory.MemoryService memories,
       @Value("${app.recent-messages}") int recentCount) {
     this.conversations = conversations;
     this.conversationRepository = conversationRepository;
@@ -54,6 +56,7 @@ public class ChatService {
     this.menu = menu;
     this.llm = llm;
     this.recommendations = recommendations;
+    this.memories=memories;
     this.intentFilter=intentFilter; this.stock=stock; this.sets=sets;
     this.recentCount = Math.clamp(recentCount, 0, 50);
   }
@@ -94,7 +97,8 @@ public class ChatService {
       picks = List.of();
     } else {
       var context = new LlmService.Context(
-          request.message(), activePreferences, recentMessages, eligible);
+          request.message(), activePreferences, recentMessages, eligible,
+          memories.relevant(request.userId(), request.conversationId(), request.message()));
       Ranking ranking;
       try {
         ranking = llm.generateRecommendation(context);
@@ -117,6 +121,7 @@ public class ChatService {
     set.conversationId=request.conversationId(); set.assistantMessageId=assistantMessage.id;
     picks.forEach(pick->set.itemIds.add(pick.id()));
     sets.save(set);
+    memories.stage(request.userId(), userMessage.id, request.message());
     return new ChatResponse(text, activePreferences, picks, set.id);
   }
 

@@ -9,4 +9,5 @@ import com.example.restaurantassistant.model.*;
   @Column(nullable=false,updatable=false) public Instant createdAt=Instant.now();
   @Column(nullable=false,unique=true,length=64) public String username;
   @Column(nullable=false) public boolean onboardingCompleted;
+  @Column(nullable=false) public long memoryVersion;
 }

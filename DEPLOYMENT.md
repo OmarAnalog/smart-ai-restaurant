@@ -1,6 +1,6 @@
 # Deployment
 
-The root Dockerfile builds React, copies its output into Spring Boot's static resources, and packages a Java 21 application. Deploy **one application container and PostgreSQL**. Both UI and API use the same HTTPS origin; the Vite development server is not used in production.
+The root Dockerfile builds React, copies its output into Spring Boot's static resources, and packages a Java 21 application. Deploy **one application container, PostgreSQL with pgvector, and RabbitMQ**. The same application runs the queue publisher and consumer. Both UI and API use the same HTTPS origin; the Vite development server is not used in production.
 
 ## Container configuration
 
@@ -22,10 +22,17 @@ Set these variables on the hosting service:
 | `DATABASE_USERNAME` | Database username |
 | `DATABASE_PASSWORD` | Database password, configured as a secret |
 | `PORT` | Host-provided listening port; defaults to 8080 |
+| `GEMINI_EMBEDDING_MODEL` | `gemini-embedding-001`, with access to the embedding API |
+| `RABBITMQ_HOST` | Broker private hostname |
+| `RABBITMQ_PORT` | Broker port; defaults to 5672 |
+| `RABBITMQ_USERNAME` | Broker username |
+| `RABBITMQ_PASSWORD` | Broker password, configured as a secret |
+| `MEMORY_ENABLED` | `true` to enable background indexing |
+| `MEMORY_RETRIEVAL_ENABLED` | `true` to enable cross-conversation semantic retrieval |
 
 A `postgres://...` or `postgresql://...` connection string is not directly a JDBC URL. Use the provider's host, port and database name to form the JDBC URL and configure credentials separately. Follow the database provider's TLS requirements; append `?sslmode=require` if required for that connection.
 
-Use a persistent managed PostgreSQL database in the same region/private network as the application. Do not store PostgreSQL data in an ephemeral web-service filesystem. Flyway runs the V1-V3 migrations on startup. A fresh deployment starts with new users and ten servings per menu item; local data is not automatically uploaded.
+Use a persistent managed PostgreSQL database in the same region/private network as the application. Do not store PostgreSQL data in an ephemeral web-service filesystem. The PostgreSQL server must have the pgvector extension installed, and the migration role must be permitted to create it. Flyway runs V1–V5 on startup; it preserves existing users, preferences, orders and stock. A fresh deployment starts with new users and ten servings per menu item; local data is not automatically uploaded.
 
 Health-check path: `/api/health`. It verifies a database connection and returns only `{"status":"UP"}`. It does not call Gemini, consume model quota or certify AI availability. Database failures return a non-success response through existing error handling.
 
@@ -47,12 +54,20 @@ Build/deploy from a fixed source revision. Let the first startup finish migratio
 
 Configure the hosting account, database and application secrets before starting the deployment.
 
-## Selected hosting path: GitHub and Railway
+## Hosting requirements
+
+The selected host must run the root Dockerfile, provide PostgreSQL with pgvector, and allow a RabbitMQ service or external broker. A static frontend host alone cannot run this architecture. This restoration adds broker hosting and embedding quota requirements; do not assume that a provider's free database or web tier includes them.
+
+RabbitMQ should use persistent storage and private connectivity. The application uses AMQP on port 5672 in the local/private configuration. If a managed broker requires TLS, set `SPRING_RABBITMQ_SSL_ENABLED=true`, its TLS port (often 5671), and use the provider's trusted certificate configuration. Do not expose the management UI publicly.
+
+`MEMORY_ENABLED=false` can disable contextual processing for troubleshooting, but pgvector remains a schema requirement. `/api/health` checks the database only: verify a new memory reaches `ACTIVE` before claiming the queue and embedding integration is healthy. If RabbitMQ is down, memories remain queued in PostgreSQL and retry after recovery.
+
+## GitHub and Railway example
 
 Source repository: `https://github.com/OmarAnalog/smart-ai-restaurant`. Publish only source, tests and documentation; `.gitignore` excludes environment files, toolchains and local build artifacts.
 
 1. Publish the source repository to your GitHub account.
-2. In Railway, create a project and add PostgreSQL with persistent storage. Keep it private to the project.
+2. Create PostgreSQL with pgvector available and persistent storage. Add RabbitMQ with persistent storage and configure its private connection variables. Keep both private to the project.
 3. Add a service from the GitHub repository. Keep its root at the monorepo root, where Railway can detect the Dockerfile.
 4. Set these app-service variable references, using the actual database service name in place of `Postgres` if different:
 

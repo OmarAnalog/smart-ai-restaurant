@@ -20,10 +20,12 @@ public class PreferenceService {
   private static final Logger log = LoggerFactory.getLogger(PreferenceService.class);
   private final UserPreferenceRepository preferences;
   private final AppUserRepository users;
+  private final com.example.restaurantassistant.service.memory.MemoryService memories;
 
-  public PreferenceService(UserPreferenceRepository preferences, AppUserRepository users) {
+  public PreferenceService(UserPreferenceRepository preferences, AppUserRepository users, com.example.restaurantassistant.service.memory.MemoryService memories) {
     this.preferences = preferences;
     this.users = users;
+    this.memories = memories;
   }
 
   public List<UserPreference> active(Long userId) {
@@ -80,12 +82,15 @@ public class PreferenceService {
   public void apply(Long userId, Long messageId, List<Update> updates) {
     validate(updates);
     lockUser(userId);
+    var correctedValues=new java.util.HashSet<String>();
+    var supersededSources=new java.util.HashSet<Long>();
     for (var update : updates) {
       String value = MenuService.canonical(update.value());
       if (update.type() == PreferenceType.BUDGET_MAX) {
         value = new BigDecimal(value).stripTrailingZeros().toPlainString();
       }
       boolean upsert = update.operation() == Operation.UPSERT;
+      if(!upsert) correctedValues.add(value);
       boolean singleton = update.type() == PreferenceType.BUDGET_MAX
           || update.type() == PreferenceType.SPICE_PREFERENCE;
 
@@ -94,6 +99,10 @@ public class PreferenceService {
         boolean replacesSameType = previous.type == update.type() && (sameValue || singleton && upsert);
         boolean replacesOpposite = upsert && sameValue && opposite(previous.type, update.type());
         if (replacesSameType || replacesOpposite) {
+          if(!upsert || replacesOpposite || singleton && !sameValue) {
+            correctedValues.add(previous.value);
+            if(previous.sourceMessageId!=null)supersededSources.add(previous.sourceMessageId);
+          }
           previous.status = PreferenceStatus.INACTIVE;
           previous.updatedAt = Instant.now();
           preferences.save(previous);
@@ -110,6 +119,12 @@ public class PreferenceService {
       }
       log.info("Staged preference operation={} type={} userId={}",
           update.operation(), update.type(), userId);
+    }
+    if(!correctedValues.isEmpty()) {
+      var user=users.findById(userId).orElseThrow();
+      user.memoryVersion++;
+      users.saveAndFlush(user);
+      memories.invalidate(userId,correctedValues,supersededSources,user.memoryVersion);
     }
   }
 }

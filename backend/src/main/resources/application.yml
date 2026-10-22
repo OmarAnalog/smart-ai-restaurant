@@ -1,10 +1,21 @@
 spring:
   flyway:
-    locations: classpath:db/migration
+    locations: classpath:db/migration,classpath:db/{vendor}
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/restaurant}
     username: ${DATABASE_USERNAME:restaurant}
     password: ${DATABASE_PASSWORD:restaurant}
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:restaurant}
+    password: ${RABBITMQ_PASSWORD:restaurant}
+    publisher-confirm-type: simple
+    connection-timeout: 3s
+    listener:
+      simple:
+        prefetch: 1
+        default-requeue-rejected: false
   jpa:
     open-in-view: false
     hibernate:
@@ -17,8 +28,12 @@ server:
   error:
     include-message: never
 app:
+  memory:
+    enabled: ${MEMORY_ENABLED:true}
+    retrieval-enabled: ${MEMORY_RETRIEVAL_ENABLED:true}
   recent-messages: ${RECENT_MESSAGES:12}
 gemini:
   api-key: ${GEMINI_API_KEY:}
+  embedding-model: ${GEMINI_EMBEDDING_MODEL:gemini-embedding-001}
   model: ${GEMINI_MODEL:gemini-3.5-flash-lite}
   base-url: ${GEMINI_BASE_URL:https://generativelanguage.googleapis.com/v1beta}

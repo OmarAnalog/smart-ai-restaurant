@@ -18,15 +18,17 @@ public class ApiController {
   private final ChatService chat;
   private final MenuService menu;
   private final OnboardingService onboarding;
+  private final com.example.restaurantassistant.service.memory.MemoryService memories;
 
   public ApiController(UserService users, ConversationService conversations,
-      PreferenceService preferences, ChatService chat, MenuService menu, OnboardingService onboarding) {
+      PreferenceService preferences, ChatService chat, MenuService menu, OnboardingService onboarding, com.example.restaurantassistant.service.memory.MemoryService memories) {
     this.users = users;
     this.conversations = conversations;
     this.preferences = preferences;
     this.chat = chat;
     this.menu = menu;
     this.onboarding = onboarding;
+    this.memories = memories;
   }
 
   @PostMapping("/users/login")
@@ -60,6 +62,12 @@ public class ApiController {
   public List<PreferenceView> preferences(@PathVariable Long id) {
     users.require(id);
     return preferences.views(id);
+  }
+
+  @GetMapping("/users/{id}/memories")
+  public java.util.List<com.example.restaurantassistant.service.memory.MemoryService.MemoryView> memories(@PathVariable Long id) {
+    users.require(id);
+    return memories.list(id);
   }
 
   @GetMapping("/menu")

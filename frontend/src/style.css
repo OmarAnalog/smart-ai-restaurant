@@ -660,3 +660,10 @@ h1 {
 .order-history details { margin-top: .75rem; font-size: .85rem; }
 .order-history summary { cursor: pointer; }
 .order-history li { margin: .5rem 0; }
+
+.contextual-memories { margin-top: 24px; border-top: 1px solid #deded5; padding-top: 16px; }
+.contextual-memories h3 { margin: 0 0 8px; font-size: 14px; }
+.contextual-memories ul { padding-left: 16px; }
+.contextual-memories li { margin-bottom: 12px; overflow-wrap: anywhere; }
+.contextual-memories li p { margin-bottom: 4px; font-size: 13px; }
+.contextual-memories small { color: #657063; }

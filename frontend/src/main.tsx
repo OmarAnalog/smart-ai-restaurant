@@ -4,6 +4,7 @@ import { api, type ConversationHistory, type ChatResponse, type Preference, type
 import './style.css';
 import { Onboarding } from './Onboarding';
 import { OrderRecommendations, RecommendationCard } from './OrderRecommendations';
+import { ContextualMemories } from './ContextualMemories';
 import { OrderHistory } from './OrderHistory';
 
 type ChatMessage = { role: 'user' | 'assistant'; content: string; recommendations?: Recommendation[]; recommendationSetId?: number };
@@ -189,6 +190,7 @@ function App() {
           <strong>Tastes change. That’s okay.</strong>
           <p>Try “Actually, mushrooms are fine now.” I’ll update what I remember.</p>
         </div>
+        <ContextualMemories key={`memory-${user.id}`} userId={user.id} revision={messages.length} />
         <OrderHistory key={`orders-${user.id}`} userId={user.id} revision={orderRevision} />
         <p className="session-label">Conversation #{conversationId}<br />Preferences belong to {user.username}.</p>
       </aside>

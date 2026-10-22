@@ -20,18 +20,22 @@ class MigrationIntegrationTest {
       statement.execute("INSERT INTO messages(id,conversation_id,role,content,created_at) VALUES(100,100,'USER','Old message',CURRENT_TIMESTAMP)");
       statement.execute("INSERT INTO preferences(user_id,type,preference_value,status,confidence,source_message_id,created_at,updated_at) VALUES(100,'ALLERGY','peanut','ACTIVE',1,100,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)");
       var current=Flyway.configure().dataSource(url,"restaurant","test-only").schemas(schema).defaultSchema(schema)
-          .locations("classpath:db/migration").load();
+          .locations("classpath:db/migration","classpath:db/postgresql").load();
       current.migrate();
       try(var rs=statement.executeQuery("SELECT preference_value FROM preferences WHERE user_id=100")) { assertThat(rs.next()).isTrue();assertThat(rs.getString(1)).isEqualTo("peanut"); }
       try(var rs=statement.executeQuery("SELECT content FROM messages WHERE id=100")) { assertThat(rs.next()).isTrue();assertThat(rs.getString(1)).isEqualTo("Old message"); }
       try(var rs=statement.executeQuery("SELECT COUNT(*) FROM menu_stock WHERE remaining_quantity=10")) {rs.next();assertThat(rs.getInt(1)).isEqualTo(16);}
       statement.execute("UPDATE menu_stock SET remaining_quantity=3 WHERE menu_item_id='classic-beef-burger'");
+      String vector=com.example.restaurantassistant.service.memory.MemoryService.vector(testVector());
+      try(var insert=c.prepareStatement("INSERT INTO contextual_memories(user_id,source_message_id,memory_version,content,status,embedding_model,embedding) VALUES(100,100,0,'Preserved memory','ACTIVE','test',CAST(? AS public.vector))")) {insert.setString(1,vector);insert.executeUpdate();}
       current.migrate();
+      try(var rs=statement.executeQuery("SELECT status,embedding IS NOT NULL FROM contextual_memories WHERE user_id=100")) {assertThat(rs.next()).isTrue();assertThat(rs.getString(1)).isEqualTo("ACTIVE");assertThat(rs.getBoolean(2)).isTrue();}
       try(var rs=statement.executeQuery("SELECT remaining_quantity FROM menu_stock WHERE menu_item_id='classic-beef-burger'")) {rs.next();assertThat(rs.getInt(1)).isEqualTo(3);}
       try(var rs=statement.executeQuery("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='"+schema+"' AND table_name IN ('outbox_events','semantic_memories','semantic_memory_vectors')")) {rs.next();assertThat(rs.getInt(1)).isZero();}
     } finally {
       try(var c=DriverManager.getConnection(url,"restaurant","test-only");var statement=c.createStatement()) {statement.execute("DROP SCHEMA IF EXISTS "+schema+" CASCADE");}
     }
   }
+  float[] testVector() {float[] v=new float[768];v[0]=1;return v;}
   @Test void upgradeFromV2PreservesDataAndRestartDoesNotResetStock() throws Exception {upgrade();}
 }
