@@ -1,0 +1,21 @@
+# Allow only build inputs. Credentials, local toolchains, photos and build outputs stay out.
+**
+!Dockerfile
+!backend/
+backend/*
+!backend/pom.xml
+!backend/src/
+!backend/src/**
+!frontend/
+frontend/*
+!frontend/package.json
+!frontend/package-lock.json
+!frontend/index.html
+!frontend/tsconfig.json
+!frontend/vite.config.ts
+!frontend/src/
+!frontend/src/**
+!frontend/public/
+!frontend/public/**
+**/.env
+**/.env.*

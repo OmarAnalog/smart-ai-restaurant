@@ -1,0 +1,24 @@
+spring:
+  flyway:
+    locations: classpath:db/migration
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/restaurant}
+    username: ${DATABASE_USERNAME:restaurant}
+    password: ${DATABASE_PASSWORD:restaurant}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  mvc:
+    problemdetails:
+      enabled: true
+server:
+  port: ${PORT:8080}
+  error:
+    include-message: never
+app:
+  recent-messages: ${RECENT_MESSAGES:12}
+gemini:
+  api-key: ${GEMINI_API_KEY:}
+  model: ${GEMINI_MODEL:gemini-3.5-flash-lite}
+  base-url: ${GEMINI_BASE_URL:https://generativelanguage.googleapis.com/v1beta}

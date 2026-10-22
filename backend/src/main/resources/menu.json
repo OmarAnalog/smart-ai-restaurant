@@ -1,0 +1,321 @@
+[
+  {
+    "id": "classic-beef-burger",
+    "name": "Classic Beef Burger",
+    "category": "Burgers",
+    "description": "Classic Beef Burger prepared fresh to order.",
+    "price": 14,
+    "ingredients": [
+      "beef",
+      "bun",
+      "lettuce",
+      "tomato",
+      "cheddar"
+    ],
+    "allergens": [
+      "wheat",
+      "milk"
+    ],
+    "vegetarian": false,
+    "vegan": false,
+    "spiceLevel": 0
+  },
+  {
+    "id": "jalapeno-chicken-burger",
+    "name": "Jalape\u00f1o Chicken Burger",
+    "category": "Burgers",
+    "description": "Jalape\u00f1o Chicken Burger prepared fresh to order.",
+    "price": 14.5,
+    "ingredients": [
+      "chicken",
+      "bun",
+      "jalapeno",
+      "lettuce",
+      "spicy sauce"
+    ],
+    "allergens": [
+      "wheat",
+      "egg"
+    ],
+    "vegetarian": false,
+    "vegan": false,
+    "spiceLevel": 4
+  },
+  {
+    "id": "mushroom-swiss-burger",
+    "name": "Mushroom Swiss Burger",
+    "category": "Burgers",
+    "description": "Mushroom Swiss Burger prepared fresh to order.",
+    "price": 16,
+    "ingredients": [
+      "beef",
+      "bun",
+      "mushroom",
+      "swiss cheese"
+    ],
+    "allergens": [
+      "wheat",
+      "milk"
+    ],
+    "vegetarian": false,
+    "vegan": false,
+    "spiceLevel": 0
+  },
+  {
+    "id": "black-bean-burger",
+    "name": "Black Bean Burger",
+    "category": "Burgers",
+    "description": "Black Bean Burger prepared fresh to order.",
+    "price": 12,
+    "ingredients": [
+      "black bean",
+      "bun",
+      "avocado",
+      "lettuce"
+    ],
+    "allergens": [
+      "wheat"
+    ],
+    "vegetarian": true,
+    "vegan": true,
+    "spiceLevel": 2
+  },
+  {
+    "id": "spicy-chicken-bowl",
+    "name": "Spicy Chicken Bowl",
+    "category": "Bowls",
+    "description": "Spicy Chicken Bowl prepared fresh to order.",
+    "price": 12.5,
+    "ingredients": [
+      "chicken",
+      "rice",
+      "jalapeno",
+      "spicy sauce",
+      "carrot"
+    ],
+    "allergens": [],
+    "vegetarian": false,
+    "vegan": false,
+    "spiceLevel": 4
+  },
+  {
+    "id": "peanut-tofu-bowl",
+    "name": "Peanut Tofu Bowl",
+    "category": "Bowls",
+    "description": "Peanut Tofu Bowl prepared fresh to order.",
+    "price": 13,
+    "ingredients": [
+      "tofu",
+      "rice",
+      "peanut",
+      "soy sauce",
+      "cabbage"
+    ],
+    "allergens": [
+      "peanut",
+      "soy",
+      "wheat"
+    ],
+    "vegetarian": true,
+    "vegan": true,
+    "spiceLevel": 2
+  },
+  {
+    "id": "salmon-grain-bowl",
+    "name": "Salmon Grain Bowl",
+    "category": "Bowls",
+    "description": "Salmon Grain Bowl prepared fresh to order.",
+    "price": 19,
+    "ingredients": [
+      "salmon",
+      "quinoa",
+      "avocado",
+      "lemon"
+    ],
+    "allergens": [
+      "fish"
+    ],
+    "vegetarian": false,
+    "vegan": false,
+    "spiceLevel": 0
+  },
+  {
+    "id": "chickpea-bowl",
+    "name": "Roasted Chickpea Bowl",
+    "category": "Bowls",
+    "description": "Roasted Chickpea Bowl prepared fresh to order.",
+    "price": 11,
+    "ingredients": [
+      "chickpea",
+      "rice",
+      "spinach",
+      "tahini"
+    ],
+    "allergens": [
+      "sesame"
+    ],
+    "vegetarian": true,
+    "vegan": true,
+    "spiceLevel": 1
+  },
+  {
+    "id": "margherita-pizza",
+    "name": "Margherita Pizza",
+    "category": "Pizza",
+    "description": "Margherita Pizza prepared fresh to order.",
+    "price": 13,
+    "ingredients": [
+      "wheat dough",
+      "tomato",
+      "mozzarella",
+      "basil"
+    ],
+    "allergens": [
+      "wheat",
+      "milk"
+    ],
+    "vegetarian": true,
+    "vegan": false,
+    "spiceLevel": 0
+  },
+  {
+    "id": "pepperoni-pizza",
+    "name": "Pepperoni Pizza",
+    "category": "Pizza",
+    "description": "Pepperoni Pizza prepared fresh to order.",
+    "price": 16,
+    "ingredients": [
+      "wheat dough",
+      "pepperoni",
+      "mozzarella",
+      "tomato"
+    ],
+    "allergens": [
+      "wheat",
+      "milk"
+    ],
+    "vegetarian": false,
+    "vegan": false,
+    "spiceLevel": 1
+  },
+  {
+    "id": "mushroom-pizza",
+    "name": "Wild Mushroom Pizza",
+    "category": "Pizza",
+    "description": "Wild Mushroom Pizza prepared fresh to order.",
+    "price": 15,
+    "ingredients": [
+      "wheat dough",
+      "mushroom",
+      "mozzarella",
+      "garlic"
+    ],
+    "allergens": [
+      "wheat",
+      "milk"
+    ],
+    "vegetarian": true,
+    "vegan": false,
+    "spiceLevel": 0
+  },
+  {
+    "id": "fire-veggie-pizza",
+    "name": "Fire Veggie Pizza",
+    "category": "Pizza",
+    "description": "Fire Veggie Pizza prepared fresh to order.",
+    "price": 14,
+    "ingredients": [
+      "wheat dough",
+      "tomato",
+      "chili",
+      "pepper",
+      "onion"
+    ],
+    "allergens": [
+      "wheat"
+    ],
+    "vegetarian": true,
+    "vegan": true,
+    "spiceLevel": 5
+  },
+  {
+    "id": "garden-salad",
+    "name": "Garden Salad",
+    "category": "Salads",
+    "description": "Garden Salad prepared fresh to order.",
+    "price": 9,
+    "ingredients": [
+      "lettuce",
+      "tomato",
+      "cucumber",
+      "olive oil"
+    ],
+    "allergens": [],
+    "vegetarian": true,
+    "vegan": true,
+    "spiceLevel": 0
+  },
+  {
+    "id": "chicken-caesar",
+    "name": "Chicken Caesar Salad",
+    "category": "Salads",
+    "description": "Chicken Caesar Salad prepared fresh to order.",
+    "price": 13,
+    "ingredients": [
+      "chicken",
+      "lettuce",
+      "parmesan",
+      "crouton",
+      "egg dressing",
+      "anchovy"
+    ],
+    "allergens": [
+      "milk",
+      "wheat",
+      "egg",
+      "fish"
+    ],
+    "vegetarian": false,
+    "vegan": false,
+    "spiceLevel": 0
+  },
+  {
+    "id": "shrimp-salad",
+    "name": "Citrus Shrimp Salad",
+    "category": "Salads",
+    "description": "Citrus Shrimp Salad prepared fresh to order.",
+    "price": 18,
+    "ingredients": [
+      "shrimp",
+      "lettuce",
+      "orange",
+      "avocado"
+    ],
+    "allergens": [
+      "shellfish"
+    ],
+    "vegetarian": false,
+    "vegan": false,
+    "spiceLevel": 1
+  },
+  {
+    "id": "greek-salad",
+    "name": "Greek Salad",
+    "category": "Salads",
+    "description": "Greek Salad prepared fresh to order.",
+    "price": 11.5,
+    "ingredients": [
+      "tomato",
+      "cucumber",
+      "feta",
+      "olive",
+      "onion"
+    ],
+    "allergens": [
+      "milk"
+    ],
+    "vegetarian": true,
+    "vegan": false,
+    "spiceLevel": 0
+  }
+]
